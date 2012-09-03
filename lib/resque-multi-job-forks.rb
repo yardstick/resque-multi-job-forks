@@ -22,6 +22,13 @@ module Resque
       end
       alias_method :shutdown_without_multi_job_forks, :shutdown?
       alias_method :shutdown?, :shutdown_with_multi_job_forks
+
+      def working_on_with_worker_registration(job)
+        register_worker
+        working_on_without_worker_registration(job)
+      end
+      alias_method :working_on_without_worker_registration, :working_on
+      alias_method :working_on, :working_on_with_worker_registration    
     end
 
     def fork_hijacked?
