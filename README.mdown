@@ -1,5 +1,21 @@
 = resque-multi-job-forks
 
+## Installation
+
+Add this line to your application's Gemfile:
+
+    gem 'redis-resharding-proxy'
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install redis-resharding-proxy
+    
+## Usage
+
 If you have very frequent and fast resque jobs, the overhead of forking and running your after_fork hook, might get too big. Using this resque plugin, you can have your workers perform more than one job, before terminating.
 
 You simply specify the number of jobs you want each fork to process using the JOBS_PER_FORK environment variable:
