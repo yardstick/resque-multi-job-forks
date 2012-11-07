@@ -4,7 +4,7 @@
 
 Add this line to your application's Gemfile:
 
-    gem 'redis-resharding-proxy'
+    gem 'redis-multi-job-forks'
 
 And then execute:
 
@@ -12,7 +12,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install redis-resharding-proxy
+    $ gem install redis-multi-jobs-fork
     
 ## Usage
 
