@@ -13,8 +13,9 @@ if defined?(RedisFailover::Client)
   class RedisFailover::Client
     # See if our redis connections belong to the current process
     def connected_in_this_process?
-      cl = dispatch(:client)
-      cl.connected_in_this_process?
+      m = @master.connected_in_this_process
+      sl = @slaves.all? {|s| s.connected_in_this_process? }
+      m && sl
     end
   end
 end
