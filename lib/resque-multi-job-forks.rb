@@ -32,16 +32,18 @@ module Resque
     end
     
     unless method_defined?(:reconnect_without_multi_job_forks)
-      def reconnect_with_multi_job_forks(job)
+      def reconnect_with_multi_job_forks
+        hijack_fork unless fork_hijacked?
+
         if @client_reconnected
-          puts "Client already reconnected"
+          # puts "Client already reconnected"
         else
-          puts "Reconnecting client after fork"
+          puts "Reconnecting client #{Process.pid} after fork"
           reconnect_without_multi_job_forks
           @client_reconnected = true
         end
       end
-
+    
       alias_method :reconnect_without_multi_job_forks, :reconnect
       alias_method :reconnect, :reconnect_with_multi_job_forks
     end
