@@ -30,6 +30,18 @@ module Resque
       alias_method :working_on_without_worker_registration, :working_on
       alias_method :working_on, :working_on_with_worker_registration    
     end
+    
+    unless method_defined?(:reconnect_without_multi_job_forks)
+      def reconnect_with_multi_job_forks(job)
+        unless @client_reconnected
+          reconnect_without_multi_job_forks
+          @client_reconnected = true
+        end
+      end
+
+      alias_method :reconnect_without_multi_job_forks, :reconnect
+      alias_method :reconnect, :reconnect_with_multi_job_forks
+    end
 
     def fork_hijacked?
       @release_fork_limit
@@ -42,6 +54,7 @@ module Resque
       @release_fork_limit = fork_job_limit
       @jobs_processed = 0
       @cant_fork = true
+      @client_reconnected = false
     end
 
     def release_fork
