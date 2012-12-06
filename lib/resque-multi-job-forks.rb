@@ -1,10 +1,21 @@
 require 'resque'
 require 'resque/worker'
-require 'redis'
 
-class Redis::Client
-  def connected_in_this_process?
-    connected? && Process.pid == @pid
+if defined?(Redis::Client)
+  class Redis::Client
+    def connected_in_this_process?
+      connected? && Process.pid == @pid
+    end
+  end
+end
+
+if defined?(RedisFailover::Client)
+  class RedisFailover::Client
+    # See if our redis connections belong to the current process
+    def connected_in_this_process?
+      cl = dispatch(:client)
+      cl.connected_in_this_process?
+    end
   end
 end
 
