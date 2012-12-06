@@ -1,5 +1,13 @@
 require 'resque'
 require 'resque/worker'
+require 'redis'
+
+class Redis::Client
+  def connected_in_this_process?
+    connected? && Process.pid == @pid
+  end
+end
+
 
 module Resque
   class Worker
@@ -34,14 +42,10 @@ module Resque
     unless method_defined?(:reconnect_without_multi_job_forks)
       def reconnect_with_multi_job_forks
         hijack_fork unless fork_hijacked?
-
-        if @client_reconnected
-          # puts "Client already reconnected"
-        else
-          puts "Reconnecting client #{Process.pid} after fork"
-          reconnect_without_multi_job_forks
-          @client_reconnected = true
-        end
+        
+        return if redis.client.connected_in_this_process?
+        log('reconnecting')
+        reconnect_without_multi_job_forks
       end
     
       alias_method :reconnect_without_multi_job_forks, :reconnect
