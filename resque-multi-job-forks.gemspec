@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "resque-multi-job-forks"
-  s.version     = "0.3.2"
+  s.version     = "0.3.3"
   s.authors     = ["Mick Staugaard", "Luke Antins", 'Sergio Tulentsev']
   s.email       = ["mick@zendesk.com", "luke@lividpenguin.com"]
   s.homepage    = "http://github.com/staugaard/resque-multi-job-forks"
