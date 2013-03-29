@@ -7,7 +7,11 @@ module Resque
     attr_accessor :jobs_per_fork
     attr_reader   :jobs_processed
 
-    unless method_defined?(:shutdown_without_multi_job_forks)
+    def self.multi_jobs_per_fork?
+      ENV["DISABLE_MULTI_JOBS_PER_FORK"].nil?
+    end
+
+    if multi_jobs_per_fork? && !method_defined?(:shutdown_without_multi_job_forks)
       def perform_with_multi_job_forks(job = nil)
         perform_without_multi_job_forks(job)
         hijack_fork unless fork_hijacked?
