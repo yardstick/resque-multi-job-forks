@@ -3,7 +3,7 @@ PATH
   specs:
     resque-multi-job-forks (0.3.4)
       json
-      resque (>= 1.23)
+      resque (= 1.23.1)
 
 GEM
   remote: http://rubygems.org/
