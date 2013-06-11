@@ -126,7 +126,7 @@ module Resque
 
   # Set the before_child_exit proc.
   def self.before_child_exit=(before_child_exit)
-    @before_child_exit = before_child_exit
+    @before_child_exit = before_child_exit.respond_to?(:each) ? before_child_exit : [before_child_exit].compact
   end
 
 end
