@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    resque-multi-job-forks (0.4.0)
+    resque-multi-job-forks (0.4.1)
       json
       resque (~> 1.24)
 
@@ -10,7 +10,7 @@ GEM
   specs:
     json (1.8.0)
     mono_logger (1.1.0)
-    multi_json (1.7.6)
+    multi_json (1.8.0)
     rack (1.5.2)
     rack-protection (1.5.0)
       rack
