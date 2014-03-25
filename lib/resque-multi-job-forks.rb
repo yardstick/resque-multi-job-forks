@@ -1,10 +1,13 @@
 require 'resque'
 require 'resque/worker'
+require 'resque/plugins/multi_job_forks/rss_reader'
 
 module Resque
   class Worker
+    include Plugins::MultiJobForks::RssReader
     attr_accessor :seconds_per_fork
     attr_accessor :jobs_per_fork
+    attr_accessor :memory_threshold
     attr_reader   :jobs_processed
 
     def self.multi_jobs_per_fork?
@@ -78,7 +81,7 @@ module Resque
     end
 
     def release_fork
-      log "jobs processed by child: #{jobs_processed}"
+      log "jobs processed by child: #{jobs_processed}; rss: #{rss}"
       run_hook :before_child_exit, self
       Resque.after_fork, Resque.before_fork = *@suppressed_fork_hooks
       @release_fork_limit = @jobs_processed = @cant_fork = nil
@@ -91,7 +94,7 @@ module Resque
     end
 
     def fork_job_limit_reached?
-      fork_job_limit_remaining <= 0 ? true : false
+      fork_job_limit_remaining <= 0 || fork_job_over_memory_threshold?
     end
 
     def fork_job_limit_remaining
@@ -109,6 +112,16 @@ module Resque
     def jobs_per_fork
       @jobs_per_fork ||= ENV['JOBS_PER_FORK'].nil? ? nil : ENV['JOBS_PER_FORK'].to_i
     end
+
+    def fork_job_over_memory_threshold?
+      !!(memory_threshold && rss > memory_threshold)
+    end
+
+    def memory_threshold
+      @memory_threshold ||= ENV["RESQUE_MEM_THRESHOLD"].to_i
+      @memory_threshold > 0 && @memory_threshold
+    end
+
   end
 
   # the `before_child_exit` hook will run in the child process
