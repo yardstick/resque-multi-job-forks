@@ -50,6 +50,16 @@ module Resque
       end
       alias_method :working_on_without_worker_registration, :working_on
       alias_method :working_on, :working_on_with_worker_registration    
+
+      # Reconnect only once
+      def reconnect_with_multi_job_forks
+        unless @reconnected
+          reconnect_without_multi_job_forks
+          @reconnected = true
+        end
+      end
+      alias_method :reconnect_without_multi_job_forks, :reconnect
+      alias_method :reconnect, :reconnect_with_multi_job_forks
     end
 
     # Need to tell the child to shutdown since it might be looping performing multiple jobs per fork
