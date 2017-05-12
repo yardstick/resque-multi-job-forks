@@ -6,11 +6,11 @@ module Resque
         LINUX = RbConfig::CONFIG['host_os'].start_with?('linux')
         PS_CMD = "ps -o rss= -p %d".freeze
         UNITS  = {
-          b:  1024**-1,
-          kb: 1024**0,
-          mb: 1024**1,
-          gb: 1024**2,
-          tb: 1024**3,
+          :b =>  1024**-1,
+          :kb => 1024**0,
+          :mb => 1024**1,
+          :gb => 1024**2,
+          :tb => 1024**3,
         }.freeze
 
         # Returns RSS in Kb; should work on Linux and Mac OS X
